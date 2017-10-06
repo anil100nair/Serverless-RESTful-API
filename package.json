@@ -1,0 +1,19 @@
+{
+  "name": "aws-restful-api",
+  "version": "1.0.0",
+  "description": "Serverless architecture with RESTful API",
+  "dependencies": {
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anil100nair/Serverless-RESTful-API.git"
+  },
+  "author": "Anil Nair",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anil100nair/Serverless-RESTful-API/issues"
+  },
+  "homepage": "https://github.com/anil100nair/Serverless-RESTful-API#readme"
+}
