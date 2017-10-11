@@ -52,9 +52,85 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  createUser:
+    handler: user/create.createUser
+    events:
+      - http:
+          path: users
+          method: post
+          cors: true
+  
+  findAllUser:
+    handler: user/fetch.findAllUsers
+    events:
+      - http:
+          path: users
+          method: get
+          cors: true
+  
+  findOneUser:
+    handler: user/fetch.findOneUser
+    events:
+      - http:
+          path: users/{userId}
+          method: get
+          cors: true
 
+  updateUser:
+    handler: user/update.editUser
+    events:
+     - http:
+        path: users/{userId}
+        method: put
+        cors: true
+
+  deleteUser:
+    handler: user/delete.deleteUser
+    events:
+      - http:
+          path: users/{userId}
+          method: delete
+          cors: true
+
+  createTask:
+    handler: task/create.createTask
+    events:
+      - http:
+          path: users/{userId}/tasks
+          method: post
+          cors: true
+  
+  findAllTask:
+    handler: user/fetch.findAllTasks
+    events:
+      - http:
+          path: users/{userId}/tasks
+          method: get
+          cors: true
+  
+  findOneTask:
+    handler: user/fetch.findOneTask
+    events:
+      - http:
+          path: users/{userId}/tasks/{taskId}
+          method: get
+          cors: true
+
+  updateTask:
+    handler: user/update.editTask
+    events:
+     - http:
+        path: users/{userId}/tasks/{taskId}
+        method: put
+        cors: true
+
+  deleteTask:
+    handler: task/delete.deleteTask
+    events:
+      - http:
+          path: users/{userId}/tasks/{taskId}
+          method: delete
+          cors: true
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
