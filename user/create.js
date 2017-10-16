@@ -8,7 +8,6 @@ module.exports.createUser = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
   
   dbInstance.connectDB().then(() => {
-    event.body = JSON.parse(event.body);
     if ( !event.body.name || !event.body.phone ) {
       const response = {
         statusCode: 400,

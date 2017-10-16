@@ -1,16 +1,64 @@
 'use strict';
 
-module.exports.hello = (event, context, callback) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
-      input: event,
-    }),
-  };
+const dbAccess = require('../lib/index');
+const usersModel = require('../model/users');
+const dbInstance = new dbAccess();
 
-  callback(null, response);
+module.exports.findAllUsers = (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+  
+  dbInstance.connectDB().then(() => {
+    usersModel.find((err, users) => {
+      if (err) {
+        console.log(err);
+        const reeponse = {
+          statusCode: 500,
+          body: JSON.stringify({
+            message: err.message,
+            input: event,
+          }),
+        };
+        callback(null, response);
+      }
+      console.log('All Users Found.');
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: "All Users Found!",
+          data: users,
+          input: event,
+        }),
+      };
+      callback(null, response);
+    });
+  });  
+};
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
+module.exports.findOneUser = (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  dbInstance.connectDB().then(() => {
+    usersModel.findById(event.pathParameters.userId).then(user => {
+      if (user === null) {
+        const reeponse = {
+          statusCode: 400,
+          body: JSON.stringify({
+            message: "Invalid User Id",
+            input: event,
+          }),
+        };
+        callback(null, response);
+      }
+      console.log('User Found.');
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: "User Found!",
+          data: user,
+          input: event,
+        }),
+      };
+      callback(null, response);
+    });
+  });  
 };
