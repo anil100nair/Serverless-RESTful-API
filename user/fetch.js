@@ -11,7 +11,7 @@ module.exports.findAllUsers = (event, context, callback) => {
     usersModel.find((err, users) => {
       if (err) {
         console.log(err);
-        const reeponse = {
+        const response = {
           statusCode: 500,
           body: JSON.stringify({
             message: err.message,
@@ -38,12 +38,12 @@ module.exports.findOneUser = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   dbInstance.connectDB().then(() => {
-    usersModel.findById(event.pathParameters.userId).then(user => {
-      if (user === null) {
-        const reeponse = {
+    usersModel.findById(event.pathParameters.userId).then((err, user) => {
+      if (user === null || err) {
+        const response = {
           statusCode: 400,
           body: JSON.stringify({
-            message: "Invalid User Id",
+            message: err || "Invalid User Id",
             input: event,
           }),
         };

@@ -1,16 +1,45 @@
 'use strict';
 
-module.exports.hello = (event, context, callback) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
-      input: event,
-    }),
-  };
+const dbAccess = require('../lib/index');
+const usersModel = require('../model/users');
+const dbInstance = new dbAccess();
 
-  callback(null, response);
+module.exports.editUser = (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+  event.body = JSON.parse(event.body);
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
+  dbInstance.connectDB().then(() => {
+    const updUser = {
+    }
+    if (event.body.name) {
+      updUser.name = event.body.name;
+    }
+    if (event.body.phone) {
+      updUser.phone = event.body.phone;
+    }
+    if (event.body.tasks) {
+      updUser.tasks = event.body.tasks;
+    }
+    usersModel.findByIdAndUpdate(event.pathParameters.userId, updUser, (err, user) => {
+      if (err) {
+        const response = {
+          statusCode: 400,
+          body: JSON.stringify({
+            message: err.message,
+            input: event,
+          }),
+        };
+        callback(null, response);
+      }
+      const response = {
+        statusCode: 201,
+        body: JSON.stringify({
+          message: "User successfully updated.",
+          data: user,
+          input: event,
+        }),
+      };
+      callback(null, response);
+    });
+  });  
 };

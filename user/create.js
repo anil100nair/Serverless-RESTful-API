@@ -6,6 +6,7 @@ const dbInstance = new dbAccess();
 
 module.exports.createUser = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
+  event.body = JSON.parse(event.body);
   
   dbInstance.connectDB().then(() => {
     if ( !event.body.name || !event.body.phone ) {
@@ -25,7 +26,7 @@ module.exports.createUser = (event, context, callback) => {
     }).save((err) => {
       if (err) {
         console.log(err);
-        const reeponse = {
+        const response = {
           statusCode: 500,
           body: JSON.stringify({
             message: err.message,
