@@ -8,6 +8,7 @@ provider:
 
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}  
+    MONGOLAB_URL_TODO: ${file(env.yml):dev.MONGOLAB_URL_TODO}
 
   iamRoleStatements:
     - Effect: "Allow"
