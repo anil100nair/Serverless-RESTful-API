@@ -22,7 +22,8 @@ module.exports.createUser = (event, context, callback) => {
     console.log("Creating Model with given data.");
     new usersModel({
       name: event.body.name,
-      phone: event.body.phone
+      phone: event.body.phone,
+      tasks: []
     }).save((err) => {
       if (err) {
         console.log(err);

@@ -38,7 +38,7 @@ module.exports.findOneUser = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   dbInstance.connectDB().then(() => {
-    usersModel.findById(event.pathParameters.userId).then((err, user) => {
+    usersModel.findById(event.pathParameters.userId, (err, user) => {
       if (user === null || err) {
         const response = {
           statusCode: 400,
