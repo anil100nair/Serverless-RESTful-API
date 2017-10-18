@@ -71,7 +71,7 @@ functions:
           cors: true
   
   findAllTask:
-    handler: user/fetch.findAllTasks
+    handler: task/fetch.findAllTasks
     events:
       - http:
           path: users/{userId}/tasks
@@ -79,7 +79,7 @@ functions:
           cors: true
   
   findOneTask:
-    handler: user/fetch.findOneTask
+    handler: task/fetch.findOneTask
     events:
       - http:
           path: users/{userId}/tasks/{taskId}
@@ -87,7 +87,7 @@ functions:
           cors: true
 
   updateTask:
-    handler: user/update.editTask
+    handler: task/update.editTask
     events:
      - http:
         path: users/{userId}/tasks/{taskId}
