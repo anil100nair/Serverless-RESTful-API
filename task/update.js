@@ -1,16 +1,53 @@
 'use strict';
 
-module.exports.hello = (event, context, callback) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
-      input: event,
-    }),
-  };
+const dbAccess = require('../lib/index');
+const usersModel = require('../model/users');
+const tasksModel = require('../model/tasks');
+const dbInstance = new dbAccess();
 
-  callback(null, response);
+module.exports.editTask = (event, context, callback) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+  event.body = JSON.parse(event.body);
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
+  dbInstance.connectDB().then(() => {
+    tasksModel.findById(event.pathParameters.taskId, (err, task) => {
+      if (err) {
+        console.log(err);
+        const response = {
+          statusCode: 404,
+          body: JSON.stringify({
+            message: err.message,
+            input: event,
+          }),
+        };
+        callback(null, response);
+      }
+      console.log('Found the task.');
+      task.task = event.body.task || task.task;
+      task.isDone = event.body.isDone || task.isDone;
+      task.taskUser = event.body.taskUser || task.taskUser;
+      tasksModel.findByIdAndUpdate(event.pathParameters.taskId, task, (err, updatedTask) => {
+        if (err) {
+          const response = {
+            statusCode: 400,
+            body: JSON.stringify({
+              message: err.message,
+              input: event,
+            }),
+          };
+          callback(null, response);
+        }
+        const response = {
+          statusCode: 201,
+          body: JSON.stringify({
+            message: "User successfully updated.",
+            data: task,
+            input: event,
+          }),
+        };
+        callback(null, response);
+      });
+    });
+  });
+    
 };
